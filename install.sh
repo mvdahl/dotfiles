@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+printf "[+] Starting Arch setup...\n"
+
+printf "[+] Installing base packages...\n"
+sudo pacman -Syu --needed --noconfirm base-devel stow fish eza git
+
+printf "[+] Verifying whether yay is installed or not...\n"
+if ! command -v yay &>/dev/null; then
+  printf "[!] yay not found\n"
+  printf "[+] Installing yay...\n"
+  tmpdir=$(mktemp -d)
+  trap 'rm -rf "$tmpdir"' EXIT
+  git clone https://aur.archlinux.org/yay-bin.git "$tmpdir/yay-bin"
+  (cd "$tmpdir/yay-bin" && makepkg -si --noconfirm)
+else
+  printf "[✓] yay already installed\n"
+fi
+
+printf "[+] Creating config directories...\n"
+mkdir -p ~/.local/share/fonts
+
+DOTFILES="$HOME/hobbyist-dotfiles"
+
+if [ -d "$DOTFILES" ]; then
+  printf "[+] Applying dotfiles...\n"
+  "$DOTFILES/stow-configs.sh" --adopt
+
+  printf "[+] Copying fonts and wallpapers...\n"
+  cp -r "$DOTFILES/Configs/Resources/fonts/." ~/.local/share/fonts/
+  cp -r "$DOTFILES/Wallpapers" ~/
+
+  pkglist="$DOTFILES/Configs/installed-pkg/pkglist.txt"
+  if [ -f "$pkglist" ]; then
+    printf "[+] Installing packages from list...\n"
+    xargs yay -S --needed --answerclean None --answerdiff None --noconfirm \
+      < "$pkglist"
+  fi
+
+else
+  printf "[!] Dotfiles repo not found at $DOTFILES — skipping dotfiles, resources, and package list.\n"
+fi
+
+if command -v fish &>/dev/null; then
+  printf "[+] Setting fish as default shell...\n"
+  chsh -s "$(command -v fish)"
+fi
+
+if ! pacman -Q bluez bluez-utils &>/dev/null; then
+  yay -S --needed --answerclean None --answerdiff None --noconfirm bluez bluez-utils && printf "bluez and bluez-utils installed successfully\n"
+fi
+
+init=$(ps -p 1 -o comm=)
+if [[ "$init" == "systemd" ]]; then
+  printf "[+] Enabling Bluetooth...\n"
+  sudo systemctl enable --now bluetooth.service
+  sudo rfkill unblock bluetooth || true
+
+  printf "[+] Setting Niri as default...\n"
+  if [[ -f "$HOME/.config/systemd/user/niri.service" ]]; then
+    systemctl --user daemon-reload
+    systemctl --user enable niri.service
+  fi
+
+  printf "[+] Enabling mako sound...\n"
+  if [[ -f "$HOME/.config/systemd/user/mako-sound.service" ]]; then
+    systemctl --user daemon-reload
+    systemctl --user enable --now mako-sound.service
+  fi
+
+else
+  printf "[!] Skipping....\n"
+  printf "[!] System is not running on $init\n"
+fi
+
+printf "[+] Fixing bash config\n"
+if [[ -f "$HOME/.config/Scripts/bashfix.sh" ]]; then
+  bash "$HOME/.config/Scripts/bashfix.sh"
+else
+  printf "bashfix not found\n"
+fi
+
+xhost +si:localuser:root
+
+if [[ -f "$HOME/.local/share/icons/WhiteSur/index.theme" ]]; then
+  printf "[✓] WhiteSur-icon-theme already installed\n"
+else
+  printf "[+] Installing WhiteSur-icon-theme...\n"
+  cd ~
+  git clone https://github.com/vinceliuice/WhiteSur-icon-theme.git
+  cd ~/WhiteSur-icon-theme
+  bash install.sh
+  rm -rf ~/WhiteSur-icon-theme/
+fi
+
+printf "[✓] Setup completed successfully!\n"
+
+read -rp "Do you want to reboot now? (y/n) " status
+
+if [[ "$status" == "y" ]]; then
+  printf "Rebooting in 3 seconds\n"
+  sleep 3
+
+  if [[ "$init" == "systemd" ]]; then
+    systemctl reboot
+  else
+    sudo reboot
+  fi
+
+else
+  printf "That's okay"
+
+fi

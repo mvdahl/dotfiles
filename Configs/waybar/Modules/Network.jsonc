@@ -1,0 +1,11 @@
+{
+  "network": {
+        "interval": 1,
+        "format-wifi": "    Connected",
+        "format-alt": " {bandwidthUpBytes}   {bandwidthDownBytes}",
+        "tooltip-format-wifi": "You are connected to ({signalStrength}%)",
+        "format-disconnected": "   No internet",
+        "on-click-right": "footclient --app-id nmtui -e nmtui"
+    }
+
+}

@@ -1,0 +1,141 @@
+window-rule {
+  geometry-corner-radius 8
+  clip-to-geometry true
+  // open-maximized true
+}
+
+window-rule {
+  match app-id="btop"
+  open-fullscreen true
+}
+
+window-rule {
+  match app-id="^kitty$"
+  match app-id="^Alacritty$"
+  background-effect {
+    blur true
+  }
+}
+
+window-rule {
+  match title="^Picture-in-Picture$"
+  match title=r#"^Picture in picture$"#
+  match app-id="org.kde.kdeconnect.daemon"
+  open-floating true
+  open-focused false
+  default-floating-position x=20 y=20 relative-to="bottom-right"
+  default-column-width { proportion 0.22; }
+  default-window-height { proportion 0.22; }
+  shadow {
+        on
+        softness 60
+        spread 10
+        offset x=0 y=10
+        draw-behind-window true
+        color "#000000"
+    }
+}
+
+layer-rule {
+  match namespace="^rofi$"
+  geometry-corner-radius 50
+  background-effect {
+    blur true
+  }
+}
+
+layer-rule {
+  match namespace="^waybar$"
+  match namespace="quickshell"
+  match namespace="^logout_dialog$"
+  background-effect {
+    blur true
+  }
+}
+
+window-rule {
+  match app-id="Brave-origin-beta"
+  match app-id="librewolf"
+  match app-id="Helium"
+  // match app-id="foot"
+  match app-id="com.mitchellh.ghostty"
+  open-maximized true
+}
+
+window-rule {
+  match app-id="jetbrains-idea"
+  open-fullscreen true
+}
+
+window-rule {
+  match app-id="org.kde.kdeconnect.app"
+  match app-id="localsend"
+  open-floating true
+  open-focused true
+  default-floating-position x=20 y=20 relative-to="bottom-right"
+  default-column-width { fixed 400; }
+  default-window-height { proportion 0.72; }
+}
+
+window-rule {
+  match title="^save to$"
+  match title="^Library$"
+  match title="^File Upload$"
+  open-floating true
+  default-column-width { fixed 1000; }
+  default-window-height { fixed 600; }
+  shadow {
+        on
+        softness 60
+        spread 10
+        offset x=0 y=10
+        draw-behind-window true
+        color "#000000"
+    }
+}
+
+window-rule {
+  match app-id="yazi"
+  open-maximized true
+}
+
+window-rule {
+  match app-id="bluetui"
+  match app-id="pulsemixer"
+  match app-id="nmtui"
+  match app-id="dashboard"
+  match app-id="ncdu"
+  match app-id="battery"
+  match app-id="sensors"
+  match app-id="aichat"
+  open-floating true
+  open-focused true
+  default-floating-position x=20 y=20 relative-to="bottom-right"
+  default-column-width { proportion 0.50; }
+  default-window-height { proportion 0.55; }
+  shadow {
+        on
+        softness 60
+        spread 10
+        offset x=0 y=10
+        draw-behind-window true
+        color "#000000"
+    }
+}
+
+window-rule {
+  match app-id="dashboard"
+  open-floating true
+  open-focused true
+  default-floating-position x=20 y=20 relative-to="bottom-right"
+  default-column-width { proportion 0.33; }
+  default-window-height { proportion 0.32; }
+  shadow {
+        on
+        softness 60
+        spread 5
+        offset x=0 y=10
+        draw-behind-window true
+        color "#000000"
+    }
+}
