@@ -6,6 +6,27 @@ require "nvchad.options"
 -- o.cursorlineopt ='both' -- to enable cursorline!
 
 vim.lsp.enable('gopls')
+
+vim.lsp.config('gopls', {
+  settings = {
+    gopls = {
+      completeUnimported = true,
+    },
+  },
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+    vim.lsp.buf.code_action({
+      context = { only = { "source.organizeImports" } },
+      apply = true,
+    })
+  end,
+})
+
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
 vim.wo.relativenumber = true
+
+vim.opt.clipboard = "unnamedplus"
