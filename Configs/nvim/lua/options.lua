@@ -6,6 +6,7 @@ require "nvchad.options"
 -- o.cursorlineopt ='both' -- to enable cursorline!
 
 vim.lsp.enable('gopls')
+vim.lsp.enable('rust_analyzer')
 
 vim.lsp.config('gopls', {
   settings = {
@@ -13,6 +14,12 @@ vim.lsp.config('gopls', {
       completeUnimported = true,
     },
   },
+})
+
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)
+
+vim.diagnostic.config({
+    update_in_insert = false,
 })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
