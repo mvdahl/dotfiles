@@ -1,7 +1,7 @@
-# Hobbyist dotfiles
-
-## MangoWM
-> [MangoWM](https://github.com/mangowm/mango) is as lightweight as dwl and can be built completely within a few seconds. Despite this, Mango does not compromise on functionality.
+# Dotfiles
+Originally copied from https://github.com/BlackSparkz/hobbyist-dotfiles.
+Only Niri is kept up to date as far as window managers go, fish is used as the terminal, etc. Look at commits for details.
+No guarantees that this readme is accurate for now.
 
 ## Niri
 > [Niri](https://github.com/YaLTeR/niri) is a scrollable-tiling Wayland compositor written in Rust. It offers a unique approach to window management compared to traditional tiling compositors.
@@ -96,8 +96,8 @@ sudo pacman -S --needed --noconfirm git
 ```
 
 ```bash
-git clone https://github.com/BlackSparkz/hobbyist-dotfiles.git
-cd ~/hobbyist-dotfiles/
+git clone https://github.com/mvdahl/dotfiles.git
+cd ~/dotfiles/
 bash install.sh
 ```
 
